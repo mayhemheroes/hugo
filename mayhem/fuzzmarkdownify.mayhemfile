@@ -1,0 +1,4 @@
+project: PROJECT
+target: fuzzmarkdownify
+cmds:
+- cmd: /out/fuzzmarkdownify
