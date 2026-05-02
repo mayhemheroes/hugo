@@ -12,26 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package transform
+package fuzzing
 
 import (
 	"context"
+	"sync"
 	"testing"
 
 	"github.com/gohugoio/hugo/hugolib"
+	"github.com/gohugoio/hugo/tpl/transform"
+)
+
+var (
+	fuzzNsOnce sync.Once
+	fuzzNs     *transform.Namespace
 )
 
 func FuzzMarkdownify(f *testing.F) {
 	f.Add("Hello **World!**")
 	f.Add("# Title\n\nSome *text*.")
 
-	b := hugolib.NewIntegrationTestBuilder(
-		hugolib.IntegrationTestConfig{T: f},
-	).Build()
-
-	ns := New(b.H.Deps)
-
 	f.Fuzz(func(t *testing.T, data string) {
-		_, _ = ns.Markdownify(context.Background(), data)
+		fuzzNsOnce.Do(func() {
+			b := hugolib.NewIntegrationTestBuilder(
+				hugolib.IntegrationTestConfig{T: t},
+			).Build()
+			fuzzNs = transform.New(b.H.Deps)
+		})
+		if fuzzNs != nil {
+			_, _ = fuzzNs.Markdownify(context.Background(), data)
+		}
 	})
 }

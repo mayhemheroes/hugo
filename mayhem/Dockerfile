@@ -16,11 +16,9 @@
 
 FROM gcr.io/oss-fuzz-base/base-builder-go
 
-COPY . hugo
-RUN rm -rf hugo/mayhem
-COPY mayhem/build.sh mayhem/fuzz.go $SRC/
-WORKDIR $SRC/hugo
+COPY . $GOPATH/src/github.com/gohugoio/hugo
+COPY mayhem/build.sh $SRC/
+WORKDIR $GOPATH/src/github.com/gohugoio/hugo
 
-ENV FUZZING_LANGUAGE=go SANITIZER=address FUZZING_ENGINE=libfuzzer
+ENV FUZZING_LANGUAGE=go SANITIZER=address FUZZING_ENGINE=libfuzzer GOFLAGS=-mod=mod
 RUN compile
-RUN chmod +x /out/fuzzmarkdownify
