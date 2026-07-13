@@ -1,0 +1,12 @@
+# Dockerignore for the commit-image build (mayhem/Dockerfile). BuildKit prefers
+# this over the repo-root .dockerignore, whose upstream rules exclude .git,
+# .github, docs and *.md/*.txt — all of which the commit image MUST bake in
+# (the grader uses .git; the test suite reads testdata *.txt files).
+# Drop only local build artifacts and editor/OS cruft.
+mayhem-build/
+*.o
+*.a
+*.so
+.DS_Store
+*.swp
+*~

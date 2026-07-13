@@ -1,0 +1,5 @@
+project: hugo
+target: fuzzmarkdownify
+cmds:
+  - cmd: /mayhem/fuzzmarkdownify
+    libfuzzer: true
